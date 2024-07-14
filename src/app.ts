@@ -1,22 +1,32 @@
 import inquirer from "inquirer";
 import chalk from "chalk";
+import PromptOptions from "./interface.js";
 
-let todo_list: string[] = [];
+let todos: string[] = [];
+let addAgain = true;
 
-const selected = await inquirer.prompt({
-  name: "option",
-  type: "list",
-  choices: ["Add Items", "Delete Items", "View Items"],
-  message: "Select an option:",
-});
+while (addAgain) {
+  const { options, addedItem, again } = await inquirer.prompt([
+    {
+      name: "selected",
+      type: "list",
+      choices: ["Add Items", "Delete Items", "View Items"],
+      message: "What do you want to do:",
+    },
+    {
+      name: "addedItem",
+      type: "input",
+      message: "Add your item",
+    },
+    {
+      name: "again",
+      type: "confirm",
+      message: "Do you want to add more items?",
+      default: false,
+    },
+  ]);
 
-if (selected.option == "Add Items") {
-  const userInput = await inquirer.prompt({
-    name: "item",
-    type: "input",
-    message: "Add your item",
-  });
-
-  todo_list.push(userInput.item);
-  console.log(todo_list);
+  addAgain = again;
+  todos.push(addedItem);
+  console.log(todos);
 }
